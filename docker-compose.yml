@@ -15,6 +15,8 @@ services:
       - SPRING_JPA_SHOW_SQL=true
       - SPRINGDOC_SWAGGER_UI_DISABLE_SWAGGER_DEFAULT_URL=true
       - SPRINGDOC_SWAGGER_UI_PATH=/swagger
+      - JWT_SECRET=${JWT_SECRET}
+      - LOGGING_LEVEL_ORG_MAGNUSCHASE_PKCHART_SECURITY=DEBUG
     networks:
       - pkchart-network
 
@@ -27,6 +29,7 @@ services:
       POSTGRES_PASSWORD: postgres
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5432:5432"
     networks:
