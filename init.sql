@@ -1,0 +1,1 @@
+CREATE DATABASE collectiondb_tests;
