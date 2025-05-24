@@ -24,14 +24,6 @@ public class CardPrice {
   @JoinColumn(name = "card_id", nullable = false)
   private Card card;
 
-  @Enumerated(EnumType.STRING)
-  @Column(nullable = false)
-  private CardCondition condition;
-
-  @Enumerated(EnumType.STRING)
-  @Column(nullable = false)
-  private PriceSource source;
-
   @Column(nullable = false)
   private LocalDate date;
 
