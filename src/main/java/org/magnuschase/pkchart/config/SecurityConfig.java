@@ -1,5 +1,6 @@
 package org.magnuschase.pkchart.config;
 
+import org.magnuschase.pkchart.model.Role;
 import org.magnuschase.pkchart.security.JwtAuthFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +18,10 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    //		  http.csrf(AbstractHttpConfigurer::disable)
+    //        .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+    //        .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
     http.csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(
             auth ->
@@ -24,8 +29,14 @@ public class SecurityConfig {
                     .permitAll()
                     .requestMatchers("/auth/login", "/auth/register")
                     .permitAll()
-                    .requestMatchers("/admin/**")
-                    .hasRole("ADMIN")
+                    .requestMatchers("/card/add", "/card/remove")
+                    .hasRole(Role.ADMIN.name())
+                    .requestMatchers("/set/add", "/set/remove")
+                    .hasRole(Role.ADMIN.name())
+                    .requestMatchers("/requests/all", "/requests/approve/**", "/requests/reject/**")
+                    .hasRole(Role.ADMIN.name())
+                    .requestMatchers("/set/all", "/card/all")
+                    .authenticated()
                     .anyRequest()
                     .authenticated())
         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

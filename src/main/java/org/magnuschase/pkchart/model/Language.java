@@ -1,19 +1,19 @@
 package org.magnuschase.pkchart.model;
 
 public enum Language {
-  JAPANESE,
-  ENGLISH,
-	GERMAN,
-	FRENCH,
-	ITALIAN,
-	SPANISH,
-	LATIN_AMERICAN_SPANISH,
-	BRAZILIAN_PORTUGUESE,
-	TRADITIONAL_CHINESE,
-  SIMPLIFIED_CHINESE,
-	KOREAN,
-	INDONESIAN,
-	DUTCH,
-	RUSSIAN,
-	POLISH
+  JPN, // Japanese
+  ENG, // English
+  GER, // German
+  FRE, // French
+  ITA, // Italian
+  SP_EU, // European Spanish
+  SP_LATAM, // Latin American Spanish
+  POR, // Brazilian Portuguese
+  CHT, // Traditional Chinese
+  CHS, // Simplified
+  KOR, // Korean
+  IND, // Indonesian
+  DUT, // Dutch
+  RUS, // Russian
+  POL // Polish
 }

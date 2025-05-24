@@ -1,17 +1,16 @@
 package org.magnuschase.pkchart.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import org.magnuschase.pkchart.model.Language;
+import org.magnuschase.pkchart.model.RequestStatus;
 
 @Entity
-@Table(name = "sets")
+@Table(name = "card_sets_pending_approval")
 @Getter
 @Setter
-public class CardSet {
+public class CardSetPendingApproval {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -26,10 +25,14 @@ public class CardSet {
   @Column(nullable = false)
   private Language language;
 
-  @Column(nullable = true)
+  @Column(nullable = false)
   private Short size;
 
-  @OneToMany(mappedBy = "set")
-  @JsonIgnore
-  private List<Card> cards;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
+
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private RequestStatus status;
 }
