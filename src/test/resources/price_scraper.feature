@@ -5,7 +5,7 @@ Feature: Scraping external sources for card prices
   So that I can update outdated or missing card prices
 
   Background:
-    Given The card "Latias EX" from set "Paradise Dragona" and condition "CGC 9.5" exists in the database
+    Given The card "Latias EX" from set "Paradise Dragona" with rarity "SAR" and condition "CGC 9.5" exists in the database
 
   Scenario: Scraping price from eBay when local price is outdated
     Given The last price update of "Latias EX" is older than 24 hours
@@ -30,7 +30,7 @@ Feature: Scraping external sources for card prices
 
   Scenario: Administrator triggers manual scraping for a card
     Given The admin is logged in
-    And The card "Latias EX" exists in the database
+    And The card "Latias EX" with rarity "SAR" exists in the database
     When The admin manually triggers price scraping for "Latias EX"
     Then The system should scrape and update the price immediately if new data is available
 

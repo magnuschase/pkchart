@@ -1,4 +1,3 @@
-@Optional
 Feature: Trading cards through marketplace
 
   As a user
@@ -6,11 +5,11 @@ Feature: Trading cards through marketplace
   So that I can interact with other collectors
 
   Background:
-    Given "Latias EX" from set "Paradise Dragona" and condition "CGC 9.5" is in the user's portfolio
+    Given "Latias EX" from set "Paradise Dragona" with rarity "SAR" and condition "CGC 9.5" is in the user's portfolio
     And User "ash.ketchum@palettetown.com" is logged in
 
   Scenario: User lists a card for sale
-    When The user creates a sale listing for "Latias EX" from set "Paradise Dragona" and condition "CGC 9.5" with price 625.00 PLN and contact "ash.ketchum@palettetown.com"
+    When The user creates a sale listing for "Latias EX" from set "Paradise Dragona" with rarity "SAR" and condition "CGC 9.5" with price 625.00 PLN and contact "ash.ketchum@palettetown.com"
     Then The listing should be visible in the marketplace
     And It should include the card name, price, and contact information
 
