@@ -22,8 +22,9 @@ public class CardSuggestionAndApprovalSteps {
   private int port;
 
   @Autowired private AuthService authService;
-	@Autowired private TestContext testContext;
 
+  private String adminToken;
+  private String userToken;
   private Response lastResponse;
   private Map<String, Object> lastRequestPayload = new HashMap<>();
 
@@ -33,7 +34,7 @@ public class CardSuggestionAndApprovalSteps {
     Response response =
         RestAssured.given()
             .port(port)
-            .header("Authorization", "Bearer " + testContext.adminToken)
+            .header("Authorization", "Bearer " + adminToken)
             .get("/card/all");
     Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode());
     Assertions.assertFalse(response.getBody().asString().contains(cardName));
@@ -56,14 +57,14 @@ public class CardSuggestionAndApprovalSteps {
     setPayload.put("size", 1);
     RestAssured.given()
         .port(port)
-        .header("Authorization", "Bearer " + testContext.adminToken)
+        .header("Authorization", "Bearer " + adminToken)
         .contentType("application/json")
         .body(setPayload)
         .put("/set/add");
     // Add card
     RestAssured.given()
         .port(port)
-        .header("Authorization", "Bearer " + testContext.adminToken)
+        .header("Authorization", "Bearer " + adminToken)
         .contentType("application/json")
         .body(payload)
         .put("/card/add");
@@ -71,7 +72,7 @@ public class CardSuggestionAndApprovalSteps {
     Response response =
         RestAssured.given()
             .port(port)
-            .header("Authorization", "Bearer " + testContext.adminToken)
+            .header("Authorization", "Bearer " + adminToken)
             .get("/card/all");
     Assertions.assertTrue(response.getBody().asString().contains(cardName));
   }
@@ -86,7 +87,7 @@ public class CardSuggestionAndApprovalSteps {
     Response response =
         RestAssured.given()
             .port(port)
-            .header("Authorization", "Bearer " + testContext.adminToken)
+            .header("Authorization", "Bearer " + adminToken)
             .contentType("application/json")
             .body(payload)
             .put("/set/add");
@@ -118,11 +119,38 @@ public class CardSuggestionAndApprovalSteps {
             .contentType("application/json")
             .body(login)
             .post("/auth/login");
-    testContext.adminToken = loginResp.jsonPath().getString("accessToken");
+    adminToken = loginResp.jsonPath().getString("accessToken");
+  }
+
+  private void ensureUserLoggedIn() {
+    if (userToken == null) {
+      String email = "user@example.com";
+      String password = "userpass";
+      Map<String, Object> register = new HashMap<>();
+      register.put("email", email);
+      register.put("username", email);
+      register.put("password", password);
+      RestAssured.given()
+          .port(port)
+          .contentType("application/json")
+          .body(register)
+          .post("/auth/register");
+      Map<String, Object> login = new HashMap<>();
+      login.put("email", email);
+      login.put("password", password);
+      Response loginResp =
+          RestAssured.given()
+              .port(port)
+              .contentType("application/json")
+              .body(login)
+              .post("/auth/login");
+      userToken = loginResp.jsonPath().getString("accessToken");
+    }
   }
 
   @When("The user requests the addition of {string} with rarity {string} from set {string}")
   public void user_requests_card_addition(String cardName, String rarity, String setName) {
+    ensureUserLoggedIn();
     Map<String, Object> payload = new HashMap<>();
     payload.put("name", cardName);
     payload.put("rarity", rarity);
@@ -133,7 +161,7 @@ public class CardSuggestionAndApprovalSteps {
     lastResponse =
         RestAssured.given()
             .port(port)
-            .header("Authorization", "Bearer " + testContext.userToken)
+            .header("Authorization", "Bearer " + userToken)
             .contentType("application/json")
             .body(payload)
             .post("/requests/card/add");
@@ -144,7 +172,7 @@ public class CardSuggestionAndApprovalSteps {
     Response response =
         RestAssured.given()
             .port(port)
-            .header("Authorization", "Bearer " + testContext.adminToken)
+            .header("Authorization", "Bearer " + adminToken)
             .get("/requests/all");
     Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode());
     // Debugging: print the response body
@@ -185,13 +213,13 @@ public class CardSuggestionAndApprovalSteps {
     Response response =
         RestAssured.given()
             .port(port)
-            .header("Authorization", "Bearer " + testContext.adminToken)
+            .header("Authorization", "Bearer " + adminToken)
             .get("/requests/all");
     Long requestId = extractRequestId(response, lastRequestPayload, RequestType.CARD_ADD);
     lastResponse =
         RestAssured.given()
             .port(port)
-            .header("Authorization", "Bearer " + testContext.adminToken)
+            .header("Authorization", "Bearer " + adminToken)
             .post("/requests/approve/" + requestId + "?type=CARD_ADD");
   }
 
@@ -201,7 +229,7 @@ public class CardSuggestionAndApprovalSteps {
     Response response =
         RestAssured.given()
             .port(port)
-            .header("Authorization", "Bearer " + testContext.userToken)
+            .header("Authorization", "Bearer " + userToken)
             .get("/card/all");
     Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode());
     Assertions.assertTrue(response.getBody().asString().contains(cardName));
@@ -209,6 +237,7 @@ public class CardSuggestionAndApprovalSteps {
 
   @When("The user requests removal of {string}")
   public void user_requests_removal(String cardName) {
+    ensureUserLoggedIn();
     Map<String, Object> payload = new HashMap<>();
     payload.put("name", cardName);
     payload.put("rarity", "COMMON");
@@ -220,7 +249,7 @@ public class CardSuggestionAndApprovalSteps {
     lastResponse =
         RestAssured.given()
             .port(port)
-            .header("Authorization", "Bearer " + testContext.userToken)
+            .header("Authorization", "Bearer " + userToken)
             .contentType("application/json")
             .body(payload)
             .post("/requests/card/remove");
@@ -231,7 +260,7 @@ public class CardSuggestionAndApprovalSteps {
     Response response =
         RestAssured.given()
             .port(port)
-            .header("Authorization", "Bearer " + testContext.adminToken)
+            .header("Authorization", "Bearer " + adminToken)
             .get("/requests/all");
     Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode());
     Assertions.assertTrue(
@@ -249,13 +278,13 @@ public class CardSuggestionAndApprovalSteps {
     Response response =
         RestAssured.given()
             .port(port)
-            .header("Authorization", "Bearer " + testContext.adminToken)
+            .header("Authorization", "Bearer " + adminToken)
             .get("/requests/all");
     Long requestId = extractRequestId(response, lastRequestPayload, RequestType.CARD_REMOVE);
     lastResponse =
         RestAssured.given()
             .port(port)
-            .header("Authorization", "Bearer " + testContext.adminToken)
+            .header("Authorization", "Bearer " + adminToken)
             .post("/requests/reject/" + requestId + "?type=CARD_REMOVE");
   }
 
@@ -264,7 +293,7 @@ public class CardSuggestionAndApprovalSteps {
     Response response =
         RestAssured.given()
             .port(port)
-            .header("Authorization", "Bearer " + testContext.userToken)
+            .header("Authorization", "Bearer " + userToken)
             .get("/card/all");
     Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode());
     Assertions.assertTrue(response.getBody().asString().contains(cardName));
@@ -277,6 +306,7 @@ public class CardSuggestionAndApprovalSteps {
 
   @When("The user requests the addition of {string} set")
   public void user_requests_set_addition(String setName) {
+    ensureUserLoggedIn();
     Map<String, Object> payload = new HashMap<>();
     payload.put("name", setName);
     payload.put("language", Language.ENG);
@@ -286,7 +316,7 @@ public class CardSuggestionAndApprovalSteps {
     lastResponse =
         RestAssured.given()
             .port(port)
-            .header("Authorization", "Bearer " + testContext.userToken)
+            .header("Authorization", "Bearer " + userToken)
             .contentType("application/json")
             .body(payload)
             .post("/requests/set/add");
@@ -303,13 +333,13 @@ public class CardSuggestionAndApprovalSteps {
     Response response =
         RestAssured.given()
             .port(port)
-            .header("Authorization", "Bearer " + testContext.adminToken)
+            .header("Authorization", "Bearer " + adminToken)
             .get("/requests/all");
     Long requestId = extractRequestId(response, lastRequestPayload, RequestType.SET_ADD);
     lastResponse =
         RestAssured.given()
             .port(port)
-            .header("Authorization", "Bearer " + testContext.adminToken)
+            .header("Authorization", "Bearer " + adminToken)
             .post("/requests/approve/" + requestId + "?type=SET_ADD");
   }
 
@@ -318,7 +348,7 @@ public class CardSuggestionAndApprovalSteps {
     Response response =
         RestAssured.given()
             .port(port)
-            .header("Authorization", "Bearer " + testContext.userToken)
+            .header("Authorization", "Bearer " + userToken)
             .get("/set/all");
     Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode());
     Assertions.assertTrue(response.getBody().asString().contains(setName));

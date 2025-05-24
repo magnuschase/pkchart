@@ -3,6 +3,8 @@ package org.magnuschase.pkchart.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.magnuschase.pkchart.model.CardCondition;
+import org.magnuschase.pkchart.model.PriceSource;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

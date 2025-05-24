@@ -120,13 +120,4 @@ public enum CardCondition {
     CardCondition(String displayName) {
         this.displayName = displayName;
     }
-
-		public static CardCondition fromDisplayName(String displayName) {
-			for (CardCondition condition : CardCondition.values()) {
-					if (condition.getDisplayName().equalsIgnoreCase(displayName)) {
-							return condition;
-					}
-			}
-			throw new IllegalArgumentException("No CardCondition with displayName: " + displayName);
-		}
 }
