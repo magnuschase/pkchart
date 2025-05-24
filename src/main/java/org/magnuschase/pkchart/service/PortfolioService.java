@@ -84,10 +84,8 @@ public class PortfolioService {
                 userRepository
                         .findByEmail(userDetails.getUsername())
                         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-
         UserPortfolioEntry entry = portfolioRepository.findById(entryId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Portfolio entry not found"));
-
         if (!entry.getUser().getId().equals(user.getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You do not have permission to remove this entry");
         }
