@@ -110,7 +110,10 @@ public enum CardCondition {
     RAW_GOOD("GD - Good (Raw)"),
     RAW_LIGHT_PLAYED("LP - Light Played (Raw)"),
     RAW_PLAYED("PL - Played (Raw)"),
-    RAW_POOR("PO - Poor (Raw)");
+    RAW_POOR("PO - Poor (Raw)"),
+
+    // Other conditions
+    RAW("Not graded (Raw)");
 
     private final String displayName;
 
