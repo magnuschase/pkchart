@@ -6,12 +6,12 @@ Feature: Admin updates card prices
 
   Background:
     Given Admin "samuel.oak@pokelab.edu" is logged in
-    And "Latias EX" from set "Paradise Dragona" and condition "CGC 9.5" currently has a price of 600.00 PLN
+    And "Latias EX" from set "Paradise Dragona" with rarity "SAR" and condition "CGC 9.5" currently has a price of 600.00 PLN
 
   Scenario: Admin updates the price of a card
     When The admin sets a new price for "Latias EX" to 625.00 PLN
-    Then The card's latest price should be 625.00 PLN
-    And A new price history entry should be stored
+    Then The card's current price should be updated to 625.00 PLN
+    And All users should see the updated price in their portfolios
 
   Scenario: Admin updates multiple card prices
     Given The following cards exist:
