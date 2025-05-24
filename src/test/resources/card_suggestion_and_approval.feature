@@ -5,8 +5,7 @@ Feature: Requesting and approving new or invalid cards
   So that the database stays accurate
 
   Background:
-    Given User "ash.ketchum@palettetown.com" is logged in
-    And Admin "samuel.oak@pokelab.edu" is logged in
+    Given Admin "samuel.oak@pokelab.edu" is logged in
 
   Scenario: User requests a new card to be added
     Given Set "Team Up" exists
@@ -21,12 +20,14 @@ Feature: Requesting and approving new or invalid cards
     Then "Latias & Latios GX" with rarity "SIR" from set "Team Up" should be added to the available card list
 
   Scenario: User requests removal of an incorrect card
-    Given "Fake Pikachu" exists in the database
+    Given The user is logged in
+    And "Fake Pikachu" exists in the database
     When The user requests removal of "Fake Pikachu"
     Then The request should be visible to the admin
 
   Scenario: Admin rejects an invalid request
-   	Given "Fake Pikachu" exists in the database
+    Given The user is logged in
+   	And "Fake Pikachu" exists in the database
     And The user requests removal of "Fake Pikachu"
     And The request should be visible to the admin
     When The admin rejects the request
