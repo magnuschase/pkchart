@@ -1,8 +1,5 @@
 package org.magnuschase.pkchart.model;
 
-import lombok.Getter;
-
-@Getter
 public enum CardCondition {
     // PSA Grades
     PSA_10("PSA 10"),
@@ -116,5 +113,9 @@ public enum CardCondition {
 
     CardCondition(String displayName) {
         this.displayName = displayName;
+    }
+
+    public String getDisplayName() {
+        return displayName;
     }
 }
