@@ -5,6 +5,6 @@ import org.magnuschase.pkchart.model.CardCondition;
 
 @Data
 public class PortfolioAddCardRequestDTO {
-    private CardCondition condition;
-    private int quantity;
+  private CardCondition condition;
+  private int quantity;
 }

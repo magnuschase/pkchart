@@ -1,12 +1,11 @@
 package org.magnuschase.pkchart.integration;
 
-import org.springframework.stereotype.Component;
-
 import io.cucumber.spring.ScenarioScope;
+import org.springframework.stereotype.Component;
 
 @Component
 @ScenarioScope
 public class TestContext {
-    public String adminToken;
-    public String userToken;
+  public String adminToken;
+  public String userToken;
 }

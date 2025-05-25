@@ -1,16 +1,13 @@
 package org.magnuschase.pkchart.entity;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-
 @Entity
-@Table(name = "card_prices", indexes = {
-  @Index(columnList = "card_id, condition, date", name = "idx_card_condition_date")
-})
+@Table(name = "card_prices")
 @Getter
 @Setter
 public class CardPrice {

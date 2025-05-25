@@ -31,6 +31,8 @@ public class SecurityConfig {
                     .hasRole(Role.ADMIN.name())
                     .requestMatchers("/requests/all", "/requests/approve/**", "/requests/reject/**")
                     .hasRole(Role.ADMIN.name())
+                    .requestMatchers("/prices/update/**", "/prices/update-multiple")
+                    .hasRole(Role.ADMIN.name())
                     .requestMatchers("/set/all", "/card/all")
                     .authenticated()
                     .anyRequest()

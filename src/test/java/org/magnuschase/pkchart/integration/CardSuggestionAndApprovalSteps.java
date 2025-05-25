@@ -22,7 +22,7 @@ public class CardSuggestionAndApprovalSteps {
   private int port;
 
   @Autowired private AuthService authService;
-	@Autowired private TestContext testContext;
+  @Autowired private TestContext testContext;
 
   private Response lastResponse;
   private Map<String, Object> lastRequestPayload = new HashMap<>();
