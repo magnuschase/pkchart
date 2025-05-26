@@ -94,6 +94,17 @@ Dockerfile
 
 ---
 
+## ✅ Cucumber Test Results
+
+- **Features tested:** 6
+- **Scenarios:** 22 passed / 0 failed
+- **Steps:** 26 passed / 0 failed / 0 skipped
+- **Duration:** ~17 seconds
+
+📄 See full HTML report: `target/cucumber-reports.html`
+
+---
+
 ## 🧠 Design Patterns Used
 
 - Controller (MVC)
