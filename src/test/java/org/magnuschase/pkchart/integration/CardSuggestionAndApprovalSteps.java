@@ -3,8 +3,12 @@ package org.magnuschase.pkchart.integration;
 import io.cucumber.java.en.*;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.junit.jupiter.api.Assertions;
 import org.magnuschase.pkchart.model.Language;
 import org.magnuschase.pkchart.model.RequestType;
@@ -26,6 +30,16 @@ public class CardSuggestionAndApprovalSteps {
 
   private Response lastResponse;
   private Map<String, Object> lastRequestPayload = new HashMap<>();
+
+
+  public String generateSymbol(String setName) {
+    // Take first letters of each word, uppercase, max 6 chars
+    String symbol =
+            Arrays.stream(setName.split("\\s+"))
+                    .map(word -> word.substring(0, 1).toUpperCase())
+                    .collect(Collectors.joining());
+    return symbol.substring(0, Math.min(6, symbol.length()));
+  }
 
   @Given("{string} with rarity {string} and set {string} does not exist in the database")
   public void card_with_rarity_and_set_does_not_exist(

@@ -6,7 +6,6 @@ import io.restassured.response.Response;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,15 +21,6 @@ public class AdminPriceManagementSteps {
   private int port;
 
   @Autowired private TestContext testContext;
-
-  public String generateSymbol(String setName) {
-    // Take first letters of each word, uppercase, max 6 chars
-    String symbol =
-        Arrays.stream(setName.split("\\s+"))
-            .map(word -> word.substring(0, 1).toUpperCase())
-            .collect(Collectors.joining());
-    return symbol.substring(0, Math.min(6, symbol.length()));
-  }
 
   @Given("The admin sets a new price for {string} from set {string} to {double} PLN")
   public void the_admin_sets_a_new_price_for_card(String cardName, String setName, double price) {
