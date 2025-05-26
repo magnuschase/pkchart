@@ -1,5 +1,7 @@
 package org.magnuschase.pkchart.service;
 
+import java.math.BigDecimal;
+import java.util.List;
 import org.magnuschase.pkchart.entity.Card;
 import org.magnuschase.pkchart.entity.MarketplaceListing;
 import org.magnuschase.pkchart.entity.User;
@@ -18,81 +20,71 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 @Service
 public class MarketplaceService {
 
-    @Autowired
-    private MarketplaceListingRepository marketplaceRepository;
-    @Autowired private UserPortfolioEntryRepository portfolioRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private CardRepository cardRepository;
+  @Autowired private MarketplaceListingRepository marketplaceRepository;
+  @Autowired private UserPortfolioEntryRepository portfolioRepository;
+  @Autowired private UserRepository userRepository;
+  @Autowired private CardRepository cardRepository;
 
-    public MarketplaceListingDTO sellCard(
-            UserDetails userDetails, CardMarketplaceSellRequestDTO request) {
-        Long portfolioEntryId = request.getPortfolioEntryId();
-        User user =
-                userRepository
-                        .findByEmail(userDetails.getUsername())
-                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-        UserPortfolioEntry entry =
-                portfolioRepository
-                        .findById(portfolioEntryId)
-                        .orElseThrow(
-                                () ->
-                                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Portfolio entry not found"));
+  public MarketplaceListingDTO sellCard(
+      UserDetails userDetails, CardMarketplaceSellRequestDTO request) {
+    Long portfolioEntryId = request.getPortfolioEntryId();
+    User user =
+        userRepository
+            .findByEmail(userDetails.getUsername())
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+    UserPortfolioEntry entry =
+        portfolioRepository
+            .findById(portfolioEntryId)
+            .orElseThrow(
+                () ->
+                    new ResponseStatusException(HttpStatus.NOT_FOUND, "Portfolio entry not found"));
 
-        if (!entry.getUser().getId().equals(user.getId())) {
-            throw new ResponseStatusException(
-                    HttpStatus.FORBIDDEN, "You do not own this card. Please check your portfolio.");
-        }
-
-
-        MarketplaceListing marketplaceListing = new MarketplaceListing();
-        marketplaceListing.setCard(entry.getCard());
-        marketplaceListing.setUser(user);
-        marketplaceListing.setPrice(BigDecimal.valueOf(request.getPrice()));
-        marketplaceListing.setCondition(entry.getCondition());
-        marketplaceListing.setContactInfo(user.getEmail());
-        marketplaceListing.setType(MarketplaceListingType.SELL);
-
-        MarketplaceListing result = marketplaceRepository.save(marketplaceListing);
-        return MarketplaceListingDTO.fromEntity(result);
+    if (!entry.getUser().getId().equals(user.getId())) {
+      throw new ResponseStatusException(
+          HttpStatus.FORBIDDEN, "You do not own this card. Please check your portfolio.");
     }
 
-    public MarketplaceListingDTO buyCard(
-            UserDetails userDetails, CardMarketplaceBuyRequestDTO request) {
-        Long cardId = request.getCardId();
-        User user =
-                userRepository
-                        .findByEmail(userDetails.getUsername())
-                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-        Card card =
-                cardRepository
-                        .findById(cardId)
-                        .orElseThrow(
-                                () ->
-                                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Card not found"));
+    MarketplaceListing marketplaceListing = new MarketplaceListing();
+    marketplaceListing.setCard(entry.getCard());
+    marketplaceListing.setUser(user);
+    marketplaceListing.setPrice(BigDecimal.valueOf(request.getPrice()));
+    marketplaceListing.setCondition(entry.getCondition());
+    marketplaceListing.setContactInfo(user.getEmail());
+    marketplaceListing.setType(MarketplaceListingType.SELL);
 
-        MarketplaceListing marketplaceListing = new MarketplaceListing();
-        marketplaceListing.setCard(card);
-        marketplaceListing.setUser(user);
-        marketplaceListing.setPrice(BigDecimal.valueOf(request.getPrice()));
-        marketplaceListing.setCondition(request.getCondition());
-        marketplaceListing.setContactInfo(user.getEmail());
-        marketplaceListing.setType(MarketplaceListingType.BUY);
+    MarketplaceListing result = marketplaceRepository.save(marketplaceListing);
+    return MarketplaceListingDTO.fromEntity(result);
+  }
 
-        MarketplaceListing result = marketplaceRepository.save(marketplaceListing);
-        return MarketplaceListingDTO.fromEntity(result);
-    }
+  public MarketplaceListingDTO buyCard(
+      UserDetails userDetails, CardMarketplaceBuyRequestDTO request) {
+    Long cardId = request.getCardId();
+    User user =
+        userRepository
+            .findByEmail(userDetails.getUsername())
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+    Card card =
+        cardRepository
+            .findById(cardId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Card not found"));
 
-    public List<MarketplaceListingDTO> getAllListings() {
-        List<MarketplaceListing> listings = marketplaceRepository.findAll();
-        return listings.stream().map(MarketplaceListingDTO::fromEntity).toList();
-    }
+    MarketplaceListing marketplaceListing = new MarketplaceListing();
+    marketplaceListing.setCard(card);
+    marketplaceListing.setUser(user);
+    marketplaceListing.setPrice(BigDecimal.valueOf(request.getPrice()));
+    marketplaceListing.setCondition(request.getCondition());
+    marketplaceListing.setContactInfo(user.getEmail());
+    marketplaceListing.setType(MarketplaceListingType.BUY);
 
+    MarketplaceListing result = marketplaceRepository.save(marketplaceListing);
+    return MarketplaceListingDTO.fromEntity(result);
+  }
+
+  public List<MarketplaceListingDTO> getAllListings() {
+    List<MarketplaceListing> listings = marketplaceRepository.findAll();
+    return listings.stream().map(MarketplaceListingDTO::fromEntity).toList();
+  }
 }

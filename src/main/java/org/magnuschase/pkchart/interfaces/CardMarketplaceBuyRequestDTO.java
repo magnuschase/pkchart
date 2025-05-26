@@ -5,7 +5,7 @@ import org.magnuschase.pkchart.model.CardCondition;
 
 @Data
 public class CardMarketplaceBuyRequestDTO {
-    private long CardId;
-    private double Price;
-    private CardCondition Condition;
+  private long CardId;
+  private double Price;
+  private CardCondition Condition;
 }

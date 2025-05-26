@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class CardMarketplaceSellRequestDTO {
-    private long PortfolioEntryId;
-    private double Price;
+  private long PortfolioEntryId;
+  private double Price;
 }
