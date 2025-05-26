@@ -86,6 +86,7 @@ Dockerfile
 
 ## 🧪 Testing
 
+- This project uses BDD (Behavior-Driven Development) practices with Cucumber and Gherkin for end-to-end integration tests.
 - **Run all tests:**
   ```sh
   ./mvnw test -Dtest=org.magnuschase.pkchart.integration.CucumberIntegrationTestRunner
