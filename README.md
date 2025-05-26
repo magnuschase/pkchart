@@ -88,20 +88,25 @@ Dockerfile
 
 - **Run all tests:**
   ```sh
-  ./mvnw test
+  ./mvnw test -Dtest=org.magnuschase.pkchart.integration.CucumberIntegrationTestRunner
   ```
 - **Cucumber reports:** See `target/cucumber-reports.html` after running tests.
+- **CI:** All Cucumber tests are automatically run on every push and pull request using [GitHub Actions](.github/workflows/ci.yml).  
+  The Cucumber HTML report is uploaded as an artifact and can be downloaded from the Actions tab after each run.
 
 ---
 
 ## ✅ Cucumber Test Results
 
+[![CI](https://github.com/magnuschase/pkchart/actions/workflows/ci.yml/badge.svg)](https://github.com/magnuschase/pkchart/actions/workflows/ci.yml)
+
 - **Features tested:** 6
 - **Scenarios:** 22 passed / 0 failed
-- **Steps:** 26 passed / 0 failed / 0 skipped
-- **Duration:** ~17 seconds
+- **Steps:** 130 passed / 0 failed / 0 skipped
+- **Duration:** ~17 seconds (locally), 36 seconds (GitHub Actions)
 
-📄 See full HTML report: `target/cucumber-reports.html`
+📄 The full Cucumber HTML report is uploaded as a [GitHub Actions artifact](https://github.com/magnuschase/pkchart/actions?query=workflow%3ACI).  
+After each CI run, you can download it from the "Artifacts" section of the workflow run in the Actions tab.
 
 ---
 
