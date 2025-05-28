@@ -47,6 +47,8 @@ docker-compose.yml
 Dockerfile
 ```
 
+![Entity Relationship Diagram](./erd.png)
+
 ---
 
 ## 🔗 APIs
